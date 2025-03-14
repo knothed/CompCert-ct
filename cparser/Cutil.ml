@@ -115,7 +115,7 @@ let declare_attributes l =
 
 let class_of_attribute = function
   | AConst | AVolatile | ARestrict -> Attr_type
-  | AAlignas _ -> Attr_object
+  | AAlignas _ | ATainted _ -> Attr_object
   | Attr(name, args) ->
       try Hashtbl.find attr_class (normalize_attrname name)
       with Not_found -> Attr_unknown
@@ -127,13 +127,14 @@ let name_of_attribute = function
   | AVolatile -> "volatile"
   | ARestrict -> "restrict"
   | AAlignas n -> "_Alignas"
+  | ATainted _ -> "tainted"
   | Attr(name, _) ->  name
 
 (* Is an attribute a ISO C standard attribute? *)
 
 let attr_is_standard = function
   | AConst | AVolatile | ARestrict -> true
-  | AAlignas _ | Attr _ -> false
+  | ATainted _ | AAlignas _ | Attr _ -> false
 
 (* Is an attribute applicable to a whole array (true) or only to
    array elements (false)? *)
@@ -146,7 +147,7 @@ let attr_array_applicable a =
 
 let attr_inherited_by_members = function
   | AConst | AVolatile | ARestrict -> true
-  | AAlignas _ | Attr _ -> false
+  | ATainted _ | AAlignas _ | Attr _ -> false
 
 (* Adding top-level attributes to a type.  Doesn't need to unroll defns. *)
 (* For array types, standard attrs are pushed to the element type. *)

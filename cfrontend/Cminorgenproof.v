@@ -2168,6 +2168,7 @@ Opaque PTree.set.
                         (Csharpminor.fn_params f)
                         (Csharpminor.fn_temps f)
                         sz
+                        (Csharpminor.fn_taint_attr f)
                         x0) in *.
   caseEq (Mem.alloc tm 0 (fn_stackspace tf)). intros tm' sp ALLOC'.
   exploit match_callstack_function_entry; eauto. simpl; eauto. simpl; auto.

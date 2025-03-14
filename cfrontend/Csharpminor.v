@@ -86,6 +86,7 @@ Record function : Type := mkfunction {
   fn_params: list ident;
   fn_vars: list (ident * Z);
   fn_temps: list ident;
+  fn_taint_attr: fun_taint_attr ident;
   fn_body: stmt
 }.
 

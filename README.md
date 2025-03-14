@@ -1,5 +1,5 @@
 # CompCert
-The formally-verified C compiler.
+The formally-verified C compiler, augmented with a transform that removes secret-dependent branches: look inside the [constant-time](constant-time/README.md) directory.
 
 ## Overview
 The CompCert C verified compiler is a compiler for a large subset of the

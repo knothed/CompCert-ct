@@ -876,3 +876,77 @@ Proof.
 Qed.
 
 End LOption.
+
+(** * Product semi-lattice *)
+
+(** This lattice combines two given semilattices via a direct product. *)
+
+Module LProd(L1 L2: SEMILATTICE) <: SEMILATTICE.
+
+Definition t: Type := L1.t * L2.t.
+
+Definition eq (x y: t) : Prop :=
+  L1.eq (fst x) (fst y) /\ L2.eq (snd x) (snd y).
+
+Lemma eq_refl: forall x, eq x x.
+Proof.
+  unfold eq; intros; destruct x. split; simpl. apply L1.eq_refl. apply L2.eq_refl.
+Qed.
+
+Lemma eq_sym: forall x y, eq x y -> eq y x.
+Proof.
+  unfold eq; intros; destruct x; destruct y. split. now apply L1.eq_sym. now apply L2.eq_sym.
+Qed.
+
+Lemma eq_trans: forall x y z, eq x y -> eq y z -> eq x z.
+Proof.
+  unfold eq; intros; destruct x; destruct y; destruct z.
+  split. now apply L1.eq_trans with (y:=t2). now apply L2.eq_trans with (y:=t3).
+Qed.
+
+Definition beq (x y: t) : bool :=
+  L1.beq (fst x) (fst y) && L2.beq (snd x) (snd y).
+
+Lemma beq_correct: forall x y, beq x y = true -> eq x y.
+Proof.
+  unfold beq, eq; intros; destruct x; destruct y.
+  apply andb_prop in H as []. split.
+  now apply L1.beq_correct. now apply L2.beq_correct.
+Qed.
+
+Definition ge (x y: t) : Prop :=
+  L1.ge (fst x) (fst y) /\ L2.ge (snd x) (snd y).
+
+Lemma ge_refl: forall x y, eq x y -> ge x y.
+Proof.
+  unfold eq, ge; intros; destruct x; destruct y.
+  split. now apply L1.ge_refl. now apply L2.ge_refl.
+Qed.
+
+Lemma ge_trans: forall x y z, ge x y -> ge y z -> ge x z.
+Proof.
+  unfold ge; intros; destruct x; destruct y; destruct z.
+  split. now apply L1.ge_trans with (y:=t2). now apply L2.ge_trans with (y:=t3).
+Qed.
+
+Definition bot : t := (L1.bot, L2.bot).
+
+Lemma ge_bot: forall x, ge x bot.
+Proof.
+  unfold ge, bot; intros. destruct x. split. apply L1.ge_bot. apply L2.ge_bot.
+Qed.
+
+Definition lub (x y: t) : t :=
+  (L1.lub (fst x) (fst y), L2.lub (snd x) (snd y)).
+
+Lemma ge_lub_left: forall x y, ge (lub x y) x.
+Proof.
+  unfold ge, lub; intros; destruct x; destruct y. split. now apply L1.ge_lub_left. now apply L2.ge_lub_left.
+Qed.
+
+Lemma ge_lub_right: forall x y, ge (lub x y) y.
+Proof.
+  unfold ge, lub; intros; destruct x; destruct y. split. now apply L1.ge_lub_right. now apply L2.ge_lub_right.
+Qed.
+
+End LProd.

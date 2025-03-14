@@ -33,12 +33,21 @@ Require Csyntax.
 Require Ctyping.
 Require Clight.
 Require Compiler.
+Require CTTransform.
+Require CTTransformCheat.
 Require Parser.
 Require Initializers.
+Require Graph.
+Require Sim1RTLToGraph.
+
+Require Import Kildall.
 
 (* Standard lib *)
 Require Import ExtrOcamlBasic.
 Require Import ExtrOcamlString.
+
+(* Constant-Time *)
+Extract Constant TopSortVerif.calc_top_sort => "TopSort.top_sort".
 
 (* Coqlib *)
 Extract Inlined Constant Coqlib.proj_sumbool => "(fun x -> x)".
@@ -125,7 +134,16 @@ Extract Constant Compiler.print_Mach => "PrintMach.print_if".
 Extract Constant Compiler.print => "fun (f: 'a -> unit) (x: 'a) -> f x; x".
 Extract Constant Compiler.time  => "Timing.time_coq".
 
-(*Extraction Inline Compiler.apply_total Compiler.apply_partial.*)
+(* CTTransform *)
+Extract Constant CTTransform.print_GraphRTL => "PrintGraphRTL.print_if".
+Extract Constant CTTransform.print_PredRTL => "PrintPredRTL.print_if".
+Extract Constant CTTransform.print => "fun (f: 'a -> unit) (x: 'a) -> f x; x".
+Extract Constant CTTransform.time  => "Timing.time_coq".
+
+Extract Constant CTTransformCheat.print_GraphRTL_fun => "PrintGraphRTL.print_fun_if".
+Extract Constant CTTransformCheat.print_PredRTL_fun => "PrintPredRTL.print_fun_if".
+Extract Constant CTTransformCheat.print => "fun (f: 'a -> unit) (x: 'a) -> f x; x".
+Extract Constant CTTransformCheat.time  => "Timing.time_coq".
 
 (* Cabs *)
 Extract Constant Cabs.loc =>
@@ -169,10 +187,12 @@ Separate Extraction
    Conventions1.dummy_int_reg Conventions1.dummy_float_reg
    Conventions1.allocatable_registers
    RTL.instr_defs RTL.instr_uses
+   Graph.successors Graph.predecessors
    Machregs.mregs_for_operation Machregs.mregs_for_builtin
    Machregs.two_address_op Machregs.is_stack_reg
    Machregs.destroyed_at_indirect_call
-   AST.signature_main
+   AST.signature_main AST.no_fun_taint
    Floats.Float32.from_parsed Floats.Float.from_parsed
    Globalenvs.Senv.invert_symbol
-   Parser.translation_unit_file.
+   Parser.translation_unit_file
+   Sim2GraphToPred.transf_program.

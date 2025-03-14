@@ -86,6 +86,7 @@ Record function: Type := mkfunction {
   fn_sig: signature;
   fn_params: list reg;
   fn_stacksize: Z;
+  fn_taint_attr: fun_taint_attr reg;
   fn_code: code;
   fn_entrypoint: node
 }.
@@ -372,6 +373,7 @@ Definition transf_function (f: function) : function :=
     f.(fn_sig)
     f.(fn_params)
     f.(fn_stacksize)
+    f.(fn_taint_attr)
     (PTree.map transf f.(fn_code))
     f.(fn_entrypoint).
 

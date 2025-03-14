@@ -12,7 +12,7 @@
 
 (** Pretty-printer for XTL *)
 
-open Printf
+open Format
 open Camlcoq
 open Datatypes
 open Maps

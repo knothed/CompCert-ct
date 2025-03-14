@@ -12,7 +12,7 @@
 
 (** Pretty-printer for Mach code *)
 
-open Printf
+open Format
 open Camlcoq
 open Datatypes
 open AST
@@ -102,5 +102,5 @@ let print_if prog =
   | None -> ()
   | Some f ->
       let oc = open_out f in
-      print_program oc prog;
+      print_program (formatter_of_out_channel oc) prog;
       close_out oc

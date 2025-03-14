@@ -190,6 +190,7 @@ Record function : Type := mkfunction {
   fn_callconv: calling_convention;
   fn_params: list (ident * type);
   fn_vars: list (ident * type);
+  fn_taint_attr: fun_taint_attr ident;
   fn_body: statement
 }.
 

@@ -400,7 +400,7 @@ Proof.
   unfold transl_function. 
   case (transl_fun f0 (init_state)); simpl; intros.
   discriminate.
-  destruct p. simpl in H. inversion H. reflexivity.
+  destruct p. destruct p. simpl in H. inversion H. reflexivity.
   intro. inversion H. reflexivity.
 Qed.
 

@@ -1,0 +1,32 @@
+{
+    "files.exclude": {
+        "**/*.vo": true,
+        "**/*.vok": true,
+        "**/*.vos": true,
+        "**/*.aux": true,
+        "**/*.glob": true,
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.hg": true,
+        "**/CVS": true,
+        "**/.DS_Store": true,
+        "**/Thumbs.db": true,
+        "**/*.cmi": true,
+        "**/*.cmo": true,
+        "**/*.cmt": true,
+        "**/*.cmti": true,
+        "**/*.cmx": true,
+        "**/*.o": true
+    },
+    "workbench.colorTheme": "Default Light Modern",
+    "workbench.preferredDarkColorTheme": "Default Dark Modern",
+    "editor.occurrencesHighlight": "off",
+    "editor.lightbulb.enabled": "off",
+    "[ocaml]": {
+        "editor.codeLens": false
+    },
+    "ocaml.sandbox": {
+        "kind": "opam",
+        "switch": "4.14.1"
+    }
+}

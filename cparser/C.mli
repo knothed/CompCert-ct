@@ -79,6 +79,7 @@ type attribute =
   | AVolatile
   | ARestrict
   | AAlignas of int                     (* always a power of 2 *)
+  | ATainted of string list
   | Attr of string * attr_arg list
 
 type attributes = attribute list

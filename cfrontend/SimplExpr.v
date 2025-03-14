@@ -616,6 +616,7 @@ Definition transl_function (f: Csyntax.function) : res function :=
               f.(Csyntax.fn_params)
               f.(Csyntax.fn_vars)
               g.(gen_trail)
+              f.(Csyntax.fn_taint_attr)
               tbody)
   end.
 

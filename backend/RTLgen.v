@@ -114,8 +114,8 @@ Definition mon (A: Type) : Type := forall (s: state), res A s.
 
 Definition ret {A: Type} (x: A) : mon A :=
   fun (s: state) => OK x s (state_incr_refl s).
-
-
+  
+  
 Definition error {A: Type} (msg: Errors.errmsg) : mon A := fun (s: state) => Error msg.
 
 Definition bind {A B: Type} (f: mon A) (g: A -> mon B) : mon B :=
@@ -142,6 +142,15 @@ Definition handle_error {A: Type} (f g: mon A) : mon A :=
     match f s with
     | OK a s' i => OK a s' i
     | Error _ => g s
+    end.
+
+Fixpoint mapM {A B: Type} (f: A -> mon B) (l: list A) : mon (list B) :=
+  match l with
+    | nil => ret nil
+    | cons a t =>
+      do r <- f a;
+      do rs <- mapM f t;
+      ret (r :: rs)
     end.
 
 (** ** Operations on state *)
@@ -667,24 +676,26 @@ Fixpoint reserve_labels (s: stmt) (lm: labelmap)
 Definition ret_reg (sig: signature) (rd: reg) : option reg :=
   if rettype_eq sig.(sig_res) Tvoid then None else Some rd.
 
-Definition transl_fun (f: CminorSel.function): mon (node * list reg) :=
+Definition transl_fun (f: CminorSel.function): mon (node * list reg * fun_taint_attr reg) :=
   do ngoto <- reserve_labels f.(fn_body) (PTree.empty node);
   do (rparams, map1) <- add_vars init_mapping f.(CminorSel.fn_params);
   do (rvars, map2) <- add_vars map1 f.(CminorSel.fn_vars);
+  do taint_regs <- mapM (find_var map2) f.(CminorSel.fn_taint_attr).(tainted_params);
   do rret <- new_reg;
   let orret := ret_reg f.(CminorSel.fn_sig) rret in
   do nret <- add_instr (Ireturn orret);
   do nentry <- transl_stmt map2 f.(CminorSel.fn_body) nret nil ngoto nret orret;
-  ret (nentry, rparams).
+  ret (nentry, rparams, mkfuntaintattr taint_regs).
 
 Definition transl_function (f: CminorSel.function) : Errors.res RTL.function :=
   match transl_fun f init_state with
   | Error msg => Errors.Error msg
-  | OK (nentry, rparams) s i =>
+  | OK (nentry, rparams, taint_attr) s i =>
       Errors.OK (RTL.mkfunction
                    f.(CminorSel.fn_sig)
                    rparams
                    f.(CminorSel.fn_stackspace)
+                   taint_attr
                    s.(st_code)
                    nentry)
   end.

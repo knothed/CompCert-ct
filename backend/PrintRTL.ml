@@ -12,7 +12,7 @@
 
 (** Pretty-printers for RTL code *)
 
-open Printf
+open Format
 open Camlcoq
 open Datatypes
 open Maps
@@ -37,8 +37,10 @@ let ros pp = function
 let print_succ pp s dfl =
   let s = P.to_int s in
   if s <> dfl then fprintf pp "\tgoto %d\n" s
+  
+let print_no_succ pp s dfl = ()
 
-let print_instruction pp (pc, i) =
+let print_instruction pp print_succ (pc, i) =
   fprintf pp "%5d:\t" pc;
   match i with
   | Inop s ->
@@ -90,6 +92,7 @@ let print_instruction pp (pc, i) =
       fprintf pp "return %a\n" reg arg
 
 let print_function pp id f =
+  if f.fn_taint_attr <> [] then fprintf pp "__attribute((tainted(%a)))\n" regs f.fn_taint_attr;
   fprintf pp "%s(%a) {\n" (extern_atom id) regs f.fn_params;
   let instrs =
     List.sort
@@ -99,7 +102,7 @@ let print_function pp id f =
         (PTree.elements f.fn_code)) in
   print_succ pp f.fn_entrypoint
     (match instrs with (pc1, _) :: _ -> pc1 | [] -> -1);
-  List.iter (print_instruction pp) instrs;
+  List.iter (print_instruction pp print_succ) instrs;
   fprintf pp "}\n\n"
 
 let print_globdef pp (id, gd) =
@@ -117,6 +120,6 @@ let print_if passno prog =
   | None -> ()
   | Some f ->
       let oc = open_out (f ^ "." ^ Z.to_string passno) in
-      print_program oc prog;
+      print_program (formatter_of_out_channel oc) prog;
       close_out oc
 

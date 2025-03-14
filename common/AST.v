@@ -284,6 +284,14 @@ Record globvar (V: Type) : Type := mkglobvar {
   gvar_volatile: bool              (**r volatile variable? *)
 }.
 
+(** User-attached taint information that can be given to functions. *)
+
+Record fun_taint_attr (V: Type) : Type := mkfuntaintattr {
+  tainted_params: list V
+}.
+
+Definition no_fun_taint (V: Type) : fun_taint_attr V := {| tainted_params := nil |}.
+
 (** Whole programs consist of:
 - a collection of global definitions (name and description);
 - a set of public names (the names that are visible outside

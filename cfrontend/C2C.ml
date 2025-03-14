@@ -400,6 +400,16 @@ let convertCallconv _tres targs va attr =
      AST.cc_unproto = (targs = None);
      AST.cc_structret = (sr <> []) }
 
+let convertMaybeTaintedAttrs fd =
+  let tainted_args = List.flatten @@ List.map (function
+    | ATainted [] -> error "tainted: requires a parameter when applied to a function ('%s')" fd.fd_name.name; []
+    | ATainted args -> args
+    | _ -> []) fd.fd_attrib in
+  let conv arg = match List.find_opt (fun (p,_) -> p.name = arg) fd.fd_params with
+    | Some (id,_) -> Some (intern_string id.name)
+    | None -> error "tainted: '%s' is not a parameter of function '%s'" arg fd.fd_name.name; None in
+   List.filter_map conv tainted_args
+
 (** Types *)
 
 let convertIkind k a : coq_type =
@@ -1161,6 +1171,7 @@ let convertFundef loc env fd =
                                          fd.fd_vararg fd.fd_attrib;
            fn_params = params;
            fn_vars = vars;
+           fn_taint_attr = convertMaybeTaintedAttrs fd;
            fn_body = body'}))
 
 (** External function declaration *)

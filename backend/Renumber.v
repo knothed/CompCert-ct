@@ -70,6 +70,7 @@ Definition transf_function (f: function) : function :=
     f.(fn_sig)
     f.(fn_params)
     f.(fn_stacksize)
+    f.(fn_taint_attr)
     (renum_cfg pnum f.(fn_code))
     (renum_pc pnum f.(fn_entrypoint)).
 

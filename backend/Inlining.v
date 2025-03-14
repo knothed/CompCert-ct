@@ -456,6 +456,7 @@ Definition transf_function (fenv: funenv) (f: function) : Errors.res function :=
     OK (mkfunction f.(fn_sig)
                    (sregs ctx f.(fn_params))
                    s.(st_stksize)
+                   f.(fn_taint_attr)
                    s.(st_code)
                    (spc ctx f.(fn_entrypoint)))
   else

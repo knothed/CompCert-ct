@@ -92,17 +92,21 @@ let attr_arg pp = function
   | AInt n -> fprintf pp "%Ld" n
   | AString s -> const pp (CStr s)
 
+let attr_args pp = function
+  | [] -> ()
+  | (arg1 :: args) ->
+    fprintf pp "(";
+    attr_arg pp arg1;
+    List.iter (fun aa -> fprintf pp ", %a" attr_arg aa) args;
+    fprintf pp ")"
+
 let attribute pp = function
   | AConst -> fprintf pp "const"
   | AVolatile -> fprintf pp "volatile"
   | ARestrict -> fprintf pp "restrict"
   | AAlignas n -> fprintf pp "_Alignas(%d)" n
-  | Attr(name, []) -> fprintf pp "__attribute__((%s))" name
-  | Attr(name, arg1 :: args) ->
-      fprintf pp "__attribute__((%s(" name;
-      attr_arg pp arg1;
-      List.iter (fun aa -> fprintf pp ", %a" attr_arg aa) args;
-      fprintf pp ")))"
+  | ATainted args -> fprintf pp "tainted%a" attr_args (List.map (fun a -> AIdent a) args)
+  | Attr(name, args) -> fprintf pp "__attribute__((%s%a))" name attr_args args
 
 let attributes pp = function
   | [] -> ()

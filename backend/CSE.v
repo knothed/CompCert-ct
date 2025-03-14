@@ -573,6 +573,7 @@ Definition transf_function (rm: romem) (f: function) : res function :=
            f.(fn_sig)
            f.(fn_params)
            f.(fn_stacksize)
+           f.(fn_taint_attr)
            (transf_code approxs f.(fn_code))
            f.(fn_entrypoint))
   end.

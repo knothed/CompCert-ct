@@ -28,9 +28,9 @@ else
 ARCHDIRS=$(ARCH)_$(BITSIZE) $(ARCH)
 endif
 
-DIRS := lib common $(ARCHDIRS) backend cfrontend driver export cparser
+DIRS := lib common $(ARCHDIRS) backend constant-time cfrontend driver export cparser
 
-COQINCLUDES := $(foreach d, $(DIRS), -R $(d) compcert.$(d))
+COQINCLUDES := $(foreach d, $(DIRS), -R $(d) $(subst /,, $(subst -,,compcert.$(d))))
 
 ifeq ($(LIBRARY_FLOCQ),local)
 DIRS += flocq/Core flocq/Prop flocq/Calc flocq/IEEE754
@@ -127,7 +127,20 @@ BACKEND=\
   Debugvar.v Debugvarproof.v \
   Mach.v \
   Bounds.v Stacklayout.v Stacking.v Stackingproof.v \
-  Asm.v Asmgen.v Asmgenproof0.v Asmgenproof1.v Asmgenproof.v
+  Asm.v Asmgen.v Asmgenproof0.v Asmgenproof1.v Asmgenproof.v \
+  SafeOp.v
+
+# Constant time implementation (in constant-time/, x86/)
+
+CONSTANTTIME=\
+  Common.v ListsExtra.v Before.v \
+  Graph.v GraphDual.v TopSortVerif.v InfluenceRegion.v \
+  SharedTypes.v SafeOpProof.v MemAxiom.v \
+  GraphRTL.v PredRTL.v SelRTL.v \
+  TaintAnalysis.v ControlFlowSecurity.v \
+  PCFL.v PCFLBranchMapping.v PCFLEdgeEmbedding.v Predication.v \
+  Sim1RTLToGraph.v Sim2GraphToPred.v Sim3PredToSel.v Sim4SelToRTL.v \
+  CTTransform.v CTTransformCheat.v
 
 # C front-end modules (in cfrontend/)
 
@@ -166,7 +179,7 @@ endif
 
 # All source files
 
-FILES=$(VLIB) $(COMMON) $(BACKEND) $(CFRONTEND) $(DRIVER) $(FLOCQ) \
+FILES=$(VLIB) $(COMMON) $(CONSTANTTIME) $(BACKEND) $(CFRONTEND) $(DRIVER) $(FLOCQ) \
   $(MENHIRLIB) $(PARSER) $(EXPORTLIB)
 
 # Generated source files
@@ -224,6 +237,9 @@ clightgen: .depend.extr compcert.ini driver/Version.ml FORCE
 clightgen.byte: .depend.extr compcert.ini driver/Version.ml FORCE
 	$(MAKE) -f Makefile.extr clightgen.byte
 
+ocaml: compcert.ini driver/Version.ml FORCE
+	$(MAKE) -f Makefile.extr ccomp
+	
 runtime:
 	$(MAKE) -C runtime
 

@@ -16,7 +16,7 @@
 
 (** Useful functions for pretty-printers *)
 
-open Printf
+open Format
 open Camlcoq
 open AST
 

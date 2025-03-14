@@ -246,6 +246,7 @@ Definition transf_function (rm: romem) (f: function) : function :=
     f.(fn_sig)
     f.(fn_params)
     f.(fn_stacksize)
+    f.(fn_taint_attr)
     (PTree.map (transf_instr f an rm) f.(fn_code))
     f.(fn_entrypoint).
 

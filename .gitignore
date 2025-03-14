@@ -75,6 +75,7 @@
 # MacOS metadata
 .DS_Store
 # Test generated data
+/test
 /test/export/clight/*.v
 /test/export/csyntax/*.v
 # Coq caches
@@ -82,3 +83,6 @@
 .nia.cache
 .nra.cache
 .csdp.cache
+
+# CoqPilot auxiliary files
+*_cp_aux.v

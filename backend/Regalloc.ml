@@ -26,7 +26,7 @@
      End Repeat
 *)
 
-open Printf
+open Format
 open Clflags
 open Camlcoq
 open Datatypes
@@ -54,13 +54,13 @@ let is_two_address op args =
 (* For tracing *)
 
 let destination_alloctrace : string option ref = ref None
-let pp = ref stdout
+let pp = ref std_formatter
 
 let init_trace () =
-  if !option_dalloctrace && !pp == stdout then begin
+  if !option_dalloctrace && !pp == std_formatter then begin
     match !destination_alloctrace with
     | None -> ()  (* should not happen *)
-    | Some f -> pp := open_out f
+    | Some f -> pp := formatter_of_out_channel (open_out f)
   end
 
 

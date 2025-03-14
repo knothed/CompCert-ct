@@ -908,16 +908,18 @@ Inductive tr_stmt (c: code) (map: mapping):
 
 Inductive tr_function: CminorSel.function -> RTL.function -> Prop :=
   | tr_function_intro:
-      forall f code rparams map1 s0 s1 i1 rvars map2 s2 i2 nentry ngoto nret rret orret,
+      forall f code rparams map1 s0 s1 i1 rvars map2 s2 i2 nentry ngoto nret rret orret taint_regs s3 i3,
       add_vars init_mapping f.(CminorSel.fn_params) s0 = OK (rparams, map1) s1 i1 ->
       add_vars map1 f.(CminorSel.fn_vars) s1 = OK (rvars, map2) s2 i2 ->
       orret = ret_reg f.(CminorSel.fn_sig) rret ->
       tr_stmt code map2 f.(CminorSel.fn_body) nentry nret nil ngoto nret orret ->
+      mapM (find_var map2) f.(CminorSel.fn_taint_attr).(tainted_params) s2 = OK (taint_regs) s3 i3 ->
       code!nret = Some(Ireturn orret) ->
       tr_function f (RTL.mkfunction
                        f.(CminorSel.fn_sig)
                        rparams
                        f.(CminorSel.fn_stackspace)
+                       (mkfuntaintattr taint_regs)
                        code
                        nentry).
 
@@ -1340,12 +1342,13 @@ Lemma transl_function_charact:
 Proof.
   intros until tf. unfold transl_function.
   caseEq (transl_fun f init_state). congruence.
-  intros [nentry rparams] sfinal INCR TR E. inv E.
+  intros [nentry_rparams taint_attr] sfinal INCR TR E. inv E.
   monadInv TR.
   exploit add_vars_valid. eexact EQ1. apply init_mapping_valid.
   intros [A B].
   exploit add_vars_valid. eexact EQ0. auto.
   intros [C D].
+  inv H0.
   eapply tr_function_intro; eauto with rtlg.
   eapply transl_stmt_charact; eauto with rtlg.
   unfold ret_reg. destruct (rettype_eq (sig_res (CminorSel.fn_sig f)) Tvoid).

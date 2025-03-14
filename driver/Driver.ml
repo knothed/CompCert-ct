@@ -48,6 +48,8 @@ let compile_c_file sourcename ifile ofile =
   set_dest PrintClight.destination option_dclight ".light.c";
   set_dest PrintCminor.destination option_dcminor ".cm";
   set_dest PrintRTL.destination option_drtl ".rtl";
+  set_dest PrintGraphRTL.destination option_drtl ".ct";
+  set_dest PrintPredRTL.destination option_drtl ".ct";
   set_dest Regalloc.destination_alloctrace option_dalloctrace ".alloctrace";
   set_dest PrintLTL.destination option_dltl ".ltl";
   set_dest PrintMach.destination option_dmach ".mach";

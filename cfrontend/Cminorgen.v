@@ -265,6 +265,7 @@ Definition transl_funbody
               (Csharpminor.fn_params f)
               (Csharpminor.fn_temps f)
               stacksize
+              (Csharpminor.fn_taint_attr f)
               tbody).
 
 Definition transl_function (f: Csharpminor.function): res function :=

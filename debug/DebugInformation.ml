@@ -178,7 +178,7 @@ let insert_type ty =
             let id = attr_aux t in
             let volatile = {vol_type = id} in
             insert (VolatileType volatile) ty
-        | Some (ARestrict|AAlignas _| Attr(_,_)),t ->
+        | Some (ARestrict|AAlignas _|ATainted _|Attr(_,_)),t ->
             attr_aux t
         | None,t -> typ_aux t
   in

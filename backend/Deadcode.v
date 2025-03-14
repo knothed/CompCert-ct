@@ -205,6 +205,7 @@ Definition transf_function (rm: romem) (f: function) : res function :=
       OK {| fn_sig := f.(fn_sig);
             fn_params := f.(fn_params);
             fn_stacksize := f.(fn_stacksize);
+            fn_taint_attr := f.(fn_taint_attr);
             fn_code := PTree.map (transf_instr approx an) f.(fn_code);
             fn_entrypoint := f.(fn_entrypoint) |}
   | None =>

@@ -278,6 +278,7 @@ Definition transf_function (f: function) : res function :=
         fn_params := f.(fn_params);
         fn_vars := vars';
         fn_temps := temps';
+        fn_taint_attr := f.(fn_taint_attr);
         fn_body := add_debug_params f.(fn_params)
                       (store_params cenv f.(fn_params)
                         (add_debug_vars vars' body')) |}.

@@ -563,6 +563,11 @@ let check_alignment loc n =
   end else
     true
 
+let check_tainted_argument loc = function
+  | AIdent str -> Some str
+  | AInt i -> error loc "tainted attribute requires function parameter identifier, not a number (%s)" (Int64.to_string i); None
+  | AString s -> error loc "tainted attribute requires function parameter identifier, not a string ('%s')" s; None
+
 (* Process GCC attributes that have special significance.  Currently we
    have two: "aligned" and "packed". *)
 let enter_gcc_attr loc a =
@@ -584,6 +589,8 @@ let enter_gcc_attr loc a =
           if check_alignment loc n && check_alignment loc p then [a] else []
       | _ -> error loc "ill-formed 'packed' attribute"; []
       end
+  | Attr(("tainted"|"__tainted__"), args) ->
+    [ATainted (List.filter_map (check_tainted_argument loc) args)]
   | _ -> [a]
 
 let elab_attribute env = function

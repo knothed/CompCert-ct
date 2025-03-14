@@ -192,6 +192,15 @@ and slabel env = function
   | Scase(e, n) -> Scase(exp env e, n)
   | sl -> sl
 
+let find_renamed_param env old_params param_name =
+  match List.find_opt (fun (p,_) -> p.name = param_name) old_params with
+    | None -> param_name
+    | Some (param,_) -> (Option.value ~default:param @@ IdentMap.find_opt param env.re_id).name
+
+let attrib env old_params = function
+  | ATainted args -> ATainted (List.map (find_renamed_param env old_params) args)
+  | attr -> attr
+
 let fundef env f =
   let (name', env0) = rename env f.fd_name in
   let (params', env1) = mmap param env0 f.fd_params in
@@ -199,7 +208,7 @@ let fundef env f =
   ( { fd_storage = f.fd_storage;
       fd_inline = f.fd_inline;
       fd_name = name';
-      fd_attrib = f.fd_attrib;
+      fd_attrib = List.map (attrib env1 f.fd_params) f.fd_attrib;
       fd_ret = typ env0 f.fd_ret;
       fd_params = params';
       fd_vararg = f.fd_vararg;

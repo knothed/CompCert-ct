@@ -465,6 +465,7 @@ Definition sel_function (dm: PTree.t globdef) (hf: helper_functions) (f: Cminor.
         f.(Cminor.fn_params)
         f.(Cminor.fn_vars)
         f.(Cminor.fn_stackspace)
+        f.(Cminor.fn_taint_attr)
         body').
 
 Definition sel_fundef (dm: PTree.t globdef) (hf: helper_functions) (f: Cminor.fundef) : res fundef :=

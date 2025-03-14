@@ -602,7 +602,7 @@ let call_main3_function main_id main_ty =
     Sreturn(Some(Ecall(main_var, Econs(arg1, Econs(arg2, Enil)), type_int32s)))
   in
   { fn_return = type_int32s; fn_callconv = cc_default;
-    fn_params = []; fn_vars = []; fn_body = body }
+    fn_params = []; fn_vars = []; fn_taint_attr = no_fun_taint; fn_body = body }
 
 let call_other_main_function main_id main_ty main_ty_res =
   let main_var = Evalof(Evar(main_id, main_ty), main_ty) in
@@ -610,7 +610,7 @@ let call_other_main_function main_id main_ty main_ty_res =
     Ssequence(Sdo(Ecall(main_var, Enil, main_ty_res)),
               Sreturn(Some(Eval(Vint(coqint_of_camlint 0l), type_int32s)))) in
   { fn_return = type_int32s; fn_callconv = cc_default;
-    fn_params = []; fn_vars = []; fn_body = body }
+    fn_params = []; fn_vars = []; fn_taint_attr = no_fun_taint; fn_body = body }
 
 let rec find_main_function name = function
   | [] -> None
