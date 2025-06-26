@@ -1,8 +1,8 @@
-# Verified Elimination of Secret Control-Flow
+# On Verifying Secret Control Flow Elimination
 
-This the development accompanying our paper "Verified Elimination of Secret Control-Flow".
+This the development accompanying our paper "On Verifying Secret Control Flow Elimination", to appear in the 16th International Conference on Interactive Theorem Proving (ITP 2025).
 
-It contains a verified transform to remove secret-dependent control-flow.
+It contains a verified transform to remove secret-dependent control flow.
 It currently only works on a restricted subset of C, notably you cannot exit the main function, nor access memory, nor have loops.
 
 We only support `x86_64` (mainly because safe operations are arch-specific), so compile and install via (inside CompCert main directory):
