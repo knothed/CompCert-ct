@@ -1,4 +1,4 @@
-# CompCert + Verfied Elimination of Secret Control-Flow
+# CompCert + Verfied Elimination of (Some) Secret Control Flow
 The formally-verified C compiler, augmented with a transform that removes secret-dependent branches: look inside the [constant-time](constant-time/README.md) directory.
 
 ---
