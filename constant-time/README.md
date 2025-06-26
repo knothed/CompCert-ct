@@ -71,7 +71,7 @@ int main(int argv, char** argc) {
 ```
 
 In this example, `calc_secret` is linearized with respect to the `secret` parameter.
-To better see how this linearization looks like, look at the `code.ct.*.calc_secret` files that also ppear with the `-drtl` option (only when using CTTransformCheat): they show the graph structure before and after linearization.
+To better see how this linearization looks like, look at the `code.ct.*.calc_secret` files that also appear with the `-drtl` option (only when using CTTransformCheat): they show the graph structure before and after linearization.
 
 ## Main Theorems
 
@@ -84,3 +84,4 @@ Our main theorems are:
 - `Theorem new_target_spec` and `Theorem new_target_chain` in `PCFLEdgeEmbedding.v` state two important properties of the PCFL algorithm about how a new target of an edge relates to its original target.
 - Lemmata `taint_ana_params_spec`, `taint_ana_respects_reg_use_op`, `taint_ana_respects_ir` and `tainted_cond_spec` give the properties of our taint analysis which are required to prove control-flow security. These are Claims T0 through T3 of the Taint Analysis section in the paper.
 
+[Supplement.pdf](Supplement.pdf) contains additional proofs that are not present in our paper.
